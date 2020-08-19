@@ -17,6 +17,11 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       bottomNavigationBar: BottomNavBar(
         onTap: (index) {},
+        backgroundColor: Colors.white,
+        selectedColor: Colors.green,
+        unselectedColor: Colors.grey[200],
+        iconColorSelected: Colors.white,
+        iconColorUnselected: Colors.grey.shade500,
         items: [
           ItemModel(icon: Icons.home, label: 'Home'),
           ItemModel(icon: Icons.home, label: 'Home'),

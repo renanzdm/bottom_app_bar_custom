@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 
 class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({this.items, this.onTap});
-  final List<ItemModel> items;
+  const BottomNavBar(
+      {this.items,
+      this.onTap,
+      this.backgroundColor,
+      this.selectedColor,
+      this.unselectedColor,
+      this.iconColorSelected,
+      this.iconColorUnselected});
 
+  final List<ItemModel> items;
+  final Color backgroundColor;
+  final Color selectedColor;
+  final Color unselectedColor;
+  final Color iconColorSelected;
+  final Color iconColorUnselected;
   final Function(int) onTap;
 
   @override
@@ -22,7 +34,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   Widget _buildTabItem(
       {int index, ItemModel itemModel, ValueChanged<int> onPressed}) {
-    double bottom = selectedIndex == index ? 10 : 0;
     return Container(
       alignment: Alignment.center,
       //color: Colors.green,
@@ -31,8 +42,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
         overflow: Overflow.visible,
         children: [
           AnimatedPositioned(
-            duration: const Duration(milliseconds: 300),
-            bottom: bottom,
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.bounceOut,
+            bottom: selectedIndex == index ? 4 : 0,
             child: InkWell(
               onTap: () {
                 onPressed(index);
@@ -43,16 +55,29 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      border:
-                          Border.fromBorderSide(BorderSide(color: Colors.red)),
-                      color: Colors.blue,
+                      color: selectedIndex == index
+                          ? widget.selectedColor
+                          : widget.backgroundColor,
                       shape: BoxShape.circle,
                     ),
-                    height: 30,
-                    width: 30,
-                    child: Icon(itemModel.icon),
+                    height: selectedIndex == index ? 35 :30,
+                    width:  selectedIndex == index ? 35 :30,
+                    child: Icon(
+                      itemModel.icon,
+                      color: selectedIndex == index
+                          ? widget.iconColorSelected
+                          : widget.iconColorUnselected,
+                      size: selectedIndex == index ? 30 : 25,
+                    ),
                   ),
-                  Text(itemModel.label),
+                  Text(
+                    itemModel.label,
+                    style: TextStyle(
+                        color: selectedIndex == index
+                            ? Colors.grey[700]
+                            : widget.iconColorUnselected,
+                        fontSize: selectedIndex == index ? 18 : 14),
+                  ),
                 ],
               ),
             ),
@@ -74,8 +99,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
       );
     });
     return Container(
+      decoration: BoxDecoration(color: widget.backgroundColor, boxShadow: [
+        BoxShadow(
+            color: Colors.grey[300],
+            offset: Offset(0.0, -2.0),
+            blurRadius: 10,
+            spreadRadius: 2),
+      ]),
       height: 50,
-      color: Colors.red,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: list,
@@ -87,6 +118,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
 class ItemModel {
   final IconData icon;
   final String label;
+
   ItemModel({
     this.icon,
     this.label,
